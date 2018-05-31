@@ -398,11 +398,6 @@ SetCloseColor(display, colormap, visual, col, image_pixel, mask_pixel,
 	    if (n == ITERATIONS - 1)
 		XGrabServer(display);
 
-#if 0
-	    if (visual->class == DirectColor) {
-		/* TODO */
-	    } else
-#endif
 		XQueryColors(display, colormap, cols, ncols);
 	}
     }
@@ -554,19 +549,6 @@ CreateColors(display, attributes, colors, ncolors, image_pixels, mask_pixels,
 #ifndef FOR_MSW
     if (USE_CLOSECOLOR) {
 	/* originally from SetCloseColor */
-#if 0
-	if (visual->class == DirectColor) {
-
-	    /*
-	     * TODO: Implement close colors for DirectColor visuals. This is
-	     * difficult situation. Chances are that we will never get here,
-	     * because any machine that supports DirectColor will probably
-	     * also support TrueColor (and probably PseudoColor). Also,
-	     * DirectColor colormaps can be very large, so looking for close
-	     * colors may be too slow.
-	     */
-	} else {
-#endif
 	    unsigned int i;
 
 	    ncols = visual->map_entries;
@@ -574,9 +556,6 @@ CreateColors(display, attributes, colors, ncolors, image_pixels, mask_pixels,
 	    for (i = 0; i < ncols; ++i)
 		cols[i].pixel = i;
 	    XQueryColors(display, colormap, cols, ncols);
-#if 0
-	}
-#endif
     }
 #endif /* ndef FOR_MSW */
 

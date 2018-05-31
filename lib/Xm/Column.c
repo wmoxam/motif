@@ -96,12 +96,6 @@ static void XmColumnLabelDestroyedCallback(
 	Widget, XtPointer, XtPointer
 );
 
-#if 0	/* POSITION HANDLING */
-	Note: this code was never finished and has been pulled out. The
-	public and semi-public traces have been pulled out of the header files.
-	Everything is marked with the #if used above.
-#endif
-
 #define BBPart(w) ((XmBulletinBoardPart*)(&(((XmBulletinBoardWidget)(w))->bulletin_board)))
 #define XiC(w) ((XmColumnConstraintPart*)(&((XmColumnConstraintPtr)((w)->core.constraints))->column))
 #define XiValidChild(c) (((c)) != NULL && XtIsManaged((c)) && \
@@ -111,11 +105,6 @@ static void XmColumnLabelDestroyedCallback(
 #define XiAlignment(c) ((XiC((c))->label_alignment == XmALIGNMENT_UNSPECIFIED) \
 			? XmColumn_default_label_alignment(XmColumn((c))) \
 			: XiC(c)->label_alignment)
-#if 0	/* POSITION HANDLING */
-#define XiPosition(c) ((XiC(c)->label_position == XiLABEL_POSITION_UNSPECIFIED)\
-		       ? XmColumn_default_label_position(XmColumn(c)) \
-		       : XiC(c)->label_position)
-#endif
 #define XiFill(c) ((XiC(c)->fill_style == XmFILL_UNSPECIFIED)\
 		   ? XmColumn_default_fill_style(XmColumn(c)) \
 		   : XiC(c)->fill_style)
@@ -123,29 +112,7 @@ static void XmColumnLabelDestroyedCallback(
 #define XiWidth(c) (XtWidth(c) + 2 * XtBorderWidth(c))
 #define XiHeight(c) (XtHeight(c) + 2 * XtBorderWidth(c))
 
-
-#if 0	/* POSITION HANDLING */
-
-/* from public .h file */
-#define XiLABEL_POSITION_UNSPECIFIED	0
-#define XiLABEL_POSITION_CENTER 	(1L<<0)
-#define XiLABEL_POSITION_LEFT		(1L<<1)
-#define XiLABEL_POSITION_RIGHT		(1L<<2)
-#define XiLABEL_POSITION_TOP		(1L<<3)
-#define XiLABEL_POSITION_BOTTOM		(1L<<4)
-
-/* structure member elements from private P.h file */
-    unsigned char default_label_position;
-    unsigned char       label_position;
-#define XmColumnC_label_position(w) XmColCField(w, label_position, unsigned char)
-#define XmColumn_default_label_position(w) XmColField(w, default_label_position, unsigned char)
-
-#endif
-
 #define DEFAULT_ALIGNMENT XmALIGNMENT_BEGINNING
-#if 0	/* POSITION HANDLING */
-#define DEFAULT_POSITION XiLABEL_POSITION_LEFT
-#endif
 #define DEFAULT_ORIENTATION XmVERTICAL
 #define DEFAULT_FILL_STYLE XmFILL_RAGGED
 
@@ -174,13 +141,6 @@ static XtResource resources[] =
     sizeof(unsigned char), XtOffsetOf(XmColumnRec, column.default_label_alignment),
     XmRImmediate, (XtPointer) DEFAULT_ALIGNMENT
   },
-#if 0	/* POSITION HANDLING */
-  {
-    XmNdefaultEntryLabelPosition, XmCEntryLabelPosition, XmRLabelPosition,
-    sizeof(unsigned char), XtOffsetOf(XmColumnRec, column.default_label_position),
-    XmRImmediate, (XtPointer) DEFAULT_POSITION
-  },
-#endif
   {
     XmNdefaultFillStyle, XmCFillStyle, XmRFillStyle,
     sizeof(unsigned char), XtOffsetOf(XmColumnRec, column.default_fill_style),
@@ -252,13 +212,6 @@ static XtResource constraint_resources[] =
     sizeof(unsigned char), XtOffsetOf(XmColumnConstraintRec, column.label_alignment),
     XmRImmediate, (XtPointer) XmALIGNMENT_UNSPECIFIED
   },
-#if 0	/* POSITION HANDLING */
-  {
-    XmNentryLabelPosition, XmCEntryLabelPosition, XmRLabelPosition,
-    sizeof(unsigned char), XtOffsetOf(XmColumnConstraintRec, column.label_position),
-    XmRImmediate, (XtPointer) XiLABEL_POSITION_UNSPECIFIED
-  },
-#endif
   {
     XmNfillStyle, XmCFillStyle, XmRFillStyle,
     sizeof(unsigned char), XtOffsetOf(XmColumnConstraintRec, column.fill_style),
@@ -412,11 +365,6 @@ ClassInitialize(void)
 {
     XmColumnClassRec* wc = &xmColumnClassRec;
 
-#if 0	/* POSITION HANDLING */
-    XtSetTypeConverter(XmRString, XmRLabelPosition,
-		       (XtTypeConverter) CvtStringToLabelPosition,
-		       NULL, 0, XtCacheAll, NULL);
-#endif
     XtSetTypeConverter(XmRString, XmRXmAlignment,
 		       (XtTypeConverter) CvtStringToXiAlignment,
 		       NULL, 0, XtCacheAll, NULL);
@@ -572,11 +520,7 @@ SetValues(Widget current, Widget request, Widget set, ArgList arg_list,
 	request_size = True;
     }
 
-    if( XmColumn_default_fill_style(cc) != XmColumn_default_fill_style(cs) 
-#if 0	/* POSITION HANDLING */
-	|| XmColumn_default_label_position(cc) != XmColumn_default_label_position(cs) 
-#endif
-	)
+    if( XmColumn_default_fill_style(cc) != XmColumn_default_fill_style(cs) )
     {
 	relayout = True;
     }
@@ -986,10 +930,6 @@ ChangeManaged(Widget widget)
 	{
 	    if( XiC(label)->request_width == 0 )
 	    {
-#if 0
-		XiC(label)->request_width = XtWidth(label);
-		XiC(label)->request_height = XtHeight(label);
-#else
 		{
 		/* Unfortunately, XtWidth() and XtHeight() may not be valid in
 		** this case. The request_width and request_height values are
@@ -1034,7 +974,6 @@ ChangeManaged(Widget widget)
 			XiC(label)->request_height = XtHeight(label);
 		    }
 		}
-#endif
 	    }
 	}
 	else
@@ -1083,7 +1022,6 @@ ConstraintInitialize(Widget request, Widget new_w, ArgList arg_list,
 	/* CR03562 CR02961 When ChangeManaged is bypassed, request width and height
 	   are not set. The 2 line will prevent this assumption which sometimes
 	   will case the widget size to have zero width/height */
-#if 1
 	/* Note! below fix problematic w.r.t. ChangeManaged code, and needs
 	** revisiting; back out temporarily
 	*/
@@ -1098,18 +1036,11 @@ ConstraintInitialize(Widget request, Widget new_w, ArgList arg_list,
 	*/
 	XiC(new_w)->request_width = XtWidth(new_w);
 	XiC(new_w)->request_height = XtHeight(new_w);
-#else
-	XiC(new_w)->request_width = 0;
-	XiC(new_w)->request_height = 0;
-#endif
 
     XiC(new_w)->label_string = XmStringCopy(XiC(new_w)->label_string);
     if( label_widget )
     {
 	XiC(new_w)->label_alignment = XmALIGNMENT_UNSPECIFIED;
-#if 0	/* POSITION HANDLING */
-	XiC(new_w)->label_position = XiLABEL_POSITION_UNSPECIFIED;
-#endif
 	XiC(new_w)->label_type = XmSTRING;
 	XiC(new_w)->label_pixmap = XmUNSPECIFIED_PIXMAP;
 	XiC(new_w)->label_string = (XmString) NULL;
@@ -1173,9 +1104,6 @@ ConstraintInitialize(Widget request, Widget new_w, ArgList arg_list,
 	XtAddCallback(label, XmNdestroyCallback,
 		      XmColumnLabelDestroyedCallback, (XtPointer) new_w);
 	XiC(label)->label_alignment = XmALIGNMENT_UNSPECIFIED;
-#if 0	/* POSITION HANDLING */
-	XiC(label)->label_position = XiLABEL_POSITION_UNSPECIFIED;
-#endif
 	XiC(label)->label_type = XmSTRING;
 	XiC(label)->label_pixmap = XmUNSPECIFIED_PIXMAP;
 	XiC(label)->label_string = (XmString) NULL;
@@ -1395,70 +1323,6 @@ CompareISOLatin1 (char *first, char *second)
 	return( True );					\
     }
 
-#if 0	/* POSITION HANDLING */
-/*
- * Function:
- *	CvtStringToLabelPosition(dpy, args, arg_cnt, from, to, data)
- * Description:
- *	This function converts a string representation of the representation
- *	type XmRLabelPosition to an actual value.
- * Input:
- *	dpy     : Display   - unused
- *	args    : XrmValue* - unused
- *	arg_cnt : Cardinal  - unused
- *	from    : XrmValue* - contains the string representation of the value
- *	to      : XrmValue* - returns the actual value
- *	data    : XtPointer - unused
- * Output:
- *	Boolean - True if the conversion was successful else False.
- */
-static Boolean
-CvtStringToLabelPosition(Display *dpy, XrmValue *args, Cardinal *arg_cnt,
-			 XrmValue *from, XrmValue *to, XtPointer data)
-{
-    unsigned char result = XiLABEL_POSITION_LEFT;
-    String        str = (String) (from->addr);
-
-    if( CompareISOLatin1(str, "label_position_unspecified") == 0 ||
-        CompareISOLatin1(str, "unspecified") == 0 )
-    {
-	result = XiLABEL_POSITION_UNSPECIFIED;
-    }
-    else if( CompareISOLatin1(str, "label_position_left") == 0 ||
-	     CompareISOLatin1(str, "left") == 0 )
-    {
-	result = XiLABEL_POSITION_LEFT;
-    }
-    else if( CompareISOLatin1(str, "label_position_right") == 0 ||
-	     CompareISOLatin1(str, "right") == 0 )
-    {
-	result = XiLABEL_POSITION_RIGHT;
-    }
-    else if( CompareISOLatin1(str, "label_position_top") == 0 ||
-	     CompareISOLatin1(str, "top") == 0 )
-    {
-	result = XiLABEL_POSITION_TOP;
-    }
-    else if( CompareISOLatin1(str, "label_position_bottom") == 0 ||
-	     CompareISOLatin1(str, "bottom") == 0 )
-    {
-	result = XiLABEL_POSITION_BOTTOM;
-    }
-    else if( CompareISOLatin1(str, "label_position_center") == 0 ||
-	     CompareISOLatin1(str, "CENTER") == 0 )
-    {
-	result = XiLABEL_POSITION_CENTER;
-    }
-    else
-    {
-	XtDisplayStringConversionWarning(dpy, from->addr, XmRLabelPosition);
-	return( False );
-    }
-
-    done(unsigned char, result);
-}
-#endif
-
 /*
  * Function:
  *	CvtStringToXiAlignment(dpy, args, arg_cnt, from, to, data)
@@ -1630,37 +1494,6 @@ VerifyResources(XmColumnWidget request, XmColumnWidget current,
 	BBPart(new_w)->label_font_list =
 	    XmeGetDefaultRenderTable((Widget) new_w, XmLABEL_FONTLIST);
     }
-
-    reset = False;
-#if 0	/* POSITION HANDLING */
-    switch( XmColumn_default_label_position(new_w) )
-    {
-    case XiLABEL_POSITION_CENTER:
-    case XiLABEL_POSITION_LEFT:
-    case XiLABEL_POSITION_RIGHT:
-    case XiLABEL_POSITION_TOP:
-    case XiLABEL_POSITION_BOTTOM:
-	break;
-    case XiLABEL_POSITION_UNSPECIFIED:
-	XmeWarning((Widget) new_w),
-			"The illegal resource value \"XiLABEL_POSITION_UNSPECIFIED\" was assigned to the resource XmNDefaultLabelPosition");
-	reset = True;
-	break;
-    default:
-	XmeWarning((Widget) new_w,
-			"An illegal resource value was assigned to the resource XmNDefaultLabelPosition");
-	reset = True;
-	break;
-    }    
-
-    if( reset )
-    {
-	XmColumn_default_label_position(new_w) =
-	    (current != NULL
-	     ? XmColumn_default_label_position(current)
-	     : DEFAULT_POSITION);
-    }
-#endif
 
     reset = False;
     switch( XmColumn_default_label_alignment(new_w) )
@@ -2365,31 +2198,6 @@ static void
 VerifyConstraints(Widget request, Widget current, Widget set)
 {
     Boolean  reset;
-
-#if 0	/* POSITION HANDLING */
-    reset = False;
-    switch( XiC(set)->label_position )
-    {
-    case XiLABEL_POSITION_CENTER:
-    case XiLABEL_POSITION_LEFT:
-    case XiLABEL_POSITION_RIGHT:
-    case XiLABEL_POSITION_TOP:
-    case XiLABEL_POSITION_BOTTOM:
-    case XiLABEL_POSITION_UNSPECIFIED:
-	break;
-    default:
-	XmeWarning(set,
-			"An illegal resource value was assigned to the resource XmNentryLabelPosition");
-	reset = True;
-	break;
-    }
-    if( reset )
-    {
-	XiC(set)->label_position = (current != NULL
-				   ? XiC(current)->label_position
-				   : XiLABEL_POSITION_UNSPECIFIED);
-    }
-#endif
 
     reset = False;
     switch( XiC(set)->label_alignment )

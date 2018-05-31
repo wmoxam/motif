@@ -3987,16 +3987,6 @@ Boolean ParseWmFuncMaybeStrArg (unsigned char **linePP,
 	return (ParseWmFuncStrArg (linePP, wmFunction, pArgs));
     }
 */
-#ifdef PANELIST
-#if 0
-    else if (*lineP == '"' && *(lineP+1) == '-')
-    {
-	/* kill off '-' */
-	strcpy ((char *) (lineP+1), (char *) (lineP+2));
-	return (ParseWmFuncStrArg (linePP, wmFunction, pArgs));
-    }
-#endif
-#endif /* PANELIST */
     if ((len = strlen ((char *)string)) != 0)
     {
 	if ((*pArgs = (String)XtMalloc (len + 1)) == NULL)

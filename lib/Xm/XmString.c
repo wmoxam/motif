@@ -5878,7 +5878,6 @@ _XmStringEntryCopy(_XmStringEntry entry)
 XmStringTag
 _XmEntryTag(_XmStringEntry entry)
 {
-#if 1
   XmStringTag rettag;
 
   if (_XmEntryOptimized(entry))
@@ -5892,12 +5891,6 @@ _XmEntryTag(_XmStringEntry entry)
     rettag = _XmUnoptSegTag(entry);
   
   return rettag;
-#else
-  return (_XmEntryOptimized(entry) ?
-	  (_XmEntryTagIndex(entry) != TAG_INDEX_UNSET ?
-	   _XmStringIndexGetTag(_XmEntryTagIndex(entry)) : NULL) :
-	  _XmUnoptSegTag(entry));
-#endif
 }
 
 void

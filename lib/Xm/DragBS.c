@@ -1118,12 +1118,6 @@ CreateDefaultTargetsTable(
  * nullTargets, but leave entries[0].numTargets to 0.
  */
 
-#if 0
-    targetsTable->entries[0].numTargets = XtNumber(nullTargets);
-    size = sizeof(Atom) * targetsTable->entries[0].numTargets;
-    targetsTable->entries[0].targets = (Atom*) XtMalloc(size);
-    memcpy(targetsTable->entries[0].targets, nullTargets, size);
-#endif
     targetsTable->entries[0].numTargets = _XmDefaultNumImportTargets;
     targetsTable->entries[0].targets = (Atom*) _XmDefaultImportTargets;
 

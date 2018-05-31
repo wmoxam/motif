@@ -1651,9 +1651,6 @@ ReverseConvertRepType(
 
     
     _XmProcessUnlock();
-#if 0
-    if (OutValue)  _XM_CONVERTER_DONE (to, String, *OutValue, ;)
-#else
     if (OutValue)
     {
 	if (to->addr)

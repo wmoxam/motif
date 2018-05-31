@@ -2293,52 +2293,6 @@ ClipboardDataIsReady(
      
 }
 
-
-#if 0
-/* This function is currently unused. */
-
-/*---------------------------------------------*/
-/* ARGSUSED */
-static int 
-ClipboardRequestorIsReady(
-        Display *display,
-        XEvent *event,
-        char *private_info )
-{
-    XPropertyEvent *property_event;
-    XDestroyWindowEvent *destroy_event;
-    ClipboardDestroyInfo info;
-
-    info = ( ClipboardDestroyInfo )private_info;
-
-    if ( (event->type & 127) == DestroyNotify )
-    {
-        destroy_event = (XDestroyWindowEvent*)event;
-
-        if ( destroy_event->window == info->window )
-        {
-            info->window = 0;
-            return 1;
-        }
-    }
-
-    if ( (event->type & 127) == PropertyNotify )
-    {
-        property_event = (XPropertyEvent*)event;
-
-        /* make sure we have right property and are ready */
-        if ( property_event->atom == info->property
-                            &&
-             property_event->state == PropertyDelete )
-        {
-            return 1;
-        }
-    }
-
-    return 0;
- }
-#endif
-
 /*---------------------------------------------*/
 static int 
 ClipboardGetSelection(Display *display,

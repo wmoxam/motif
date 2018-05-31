@@ -281,10 +281,6 @@ ClientData *pcd;
 
 Boolean ForceLowerWindow (ClientData *pcd)
 {
-#if 0
-    Window stackWindow;
-    WmScreenData *pSD = (ACTIVE_WS)->pSD;
-#endif
     XWindowChanges changes;
     Boolean restack = False;
 #ifdef WSM
@@ -330,16 +326,6 @@ Boolean ForceLowerWindow (ClientData *pcd)
 	}
     }
 #endif /* WSM */
-#if 0
-    if (pSD->lastClient->type == MINIMIZED_STATE)
-    {
-	stackWindow = ICON_FRAME_WIN(pSD->lastClient->pCD);
-    }
-    else
-    {
-	stackWindow = pSD->lastClient->pCD->clientFrameWin;
-    }
-#endif
 
     changes.stack_mode = Below;
 #ifdef WSM
@@ -3843,23 +3829,8 @@ Boolean F_Separator (String args, ClientData *pCD, XEvent *event)
 
 Boolean ForceRaiseWindow (ClientData *pcd)
 {
-#if 0
-    Window stackWindow;
-    WmScreenData *pSD = (ACTIVE_WS)->pSD;
-#endif
     XWindowChanges changes;
     Boolean restack = False;
-
-#if 0
-    if (pSD->clientList->type == MINIMIZED_STATE)
-    {
-	stackWindow = ICON_FRAME_WIN(pSD->clientList->pCD);
-    }
-    else
-    {
-	stackWindow = pSD->clientList->pCD->clientFrameWin;
-    }
-#endif
 
     /*
      * Windows did not raise on regular f.raise because the raise was

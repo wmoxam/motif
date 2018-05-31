@@ -852,11 +852,6 @@ SetValues(
 	        XmStringCompare(new_blank, old_blank))
 	    {
                 new_w->command.error = FALSE;
-#if 0
-                XmListDeletePos(SB_List(old), 0);   /* Delete error message.*/
-                XmListDeletePos(SB_List(old), 0) ;   /* Delete blank line.*/
-                old->command.error = FALSE ;
-#endif
 	    }
 	}
 	else new_w->command.error = FALSE;

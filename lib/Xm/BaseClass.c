@@ -896,6 +896,21 @@ RealizeWrapper(
        *	be called for the ApplicationShell class.
        */
 
+#if 0
+      /* DRK 6/20/94 -- This change breaks our test environment; when
+       *	present the normal shell isn't added to the grab list
+       *	because VendorExtRealize is never called.  It used to
+       *	be called for the ApplicationShell class.
+       */
+
+      /*
+       * CR 9266: Only call the RealizeCallback if we're doing the
+       * VendorShell class level. Do not call multiple times for
+       * VendorShell subclasses.
+       */
+      if ((extData = _XmGetWidgetExtData(w, XmSHELL_EXTENSION)) &&
+	  (extData->widget) && wc == vendorShellWidgetClass)
+#else
       /*
        * CR 9266: Only call the RealizeCallback if we're doing the
        * VendorShell class level. Do not call multiple times for
